@@ -10,13 +10,11 @@ Try {
 
     $SqlServer = "MANH"       				# Replace with your SQL Server instance name
     $Database = "mssql"         			# Replace with your database name (optional, can be in the SQL file)
-    #$SqlFile = "tblUsers-Schema.sql" 		# Replace with the path to your .sql file
-    $SqlFile = "tblUsers-InsertData.sql" 	# Replace with the path to your .sql file
+    $SqlFile = "tblUsers-Schema.sql" 			# Replace with the path to your .sql file
 
-    # Without capture output
-    #Invoke-Sqlcmd -ServerInstance $SqlServer -Database $Database -InputFile $SqlFile
+    Invoke-Sqlcmd -ServerInstance $SqlServer -Database $Database -InputFile $SqlFile
 
-    # Capture output
+    $SqlFile = "tblUsers-InsertData.sql" 		# Replace with the path to your .sql file
     try {
         $Output = Invoke-Sqlcmd -ServerInstance $SqlServer -Database $Database -InputFile $SqlFile -ErrorAction Stop
         Write-Host "SQL script executed successfully."

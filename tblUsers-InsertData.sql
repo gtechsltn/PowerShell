@@ -1,4 +1,4 @@
--- Insert 1000 sample users
+-- Insert 1000 sample users with binary data
 DECLARE @i INT = 1;
 
 WHILE @i <= 1000
@@ -57,9 +57,13 @@ BEGIN
         CAST(DATEADD(SECOND, @i % 86400, '00:00:00') AS TIME),       -- LoginTime
         SYSDATETIMEOFFSET(),                                         -- TimestampColumn
         GETDATE(),                                                   -- CreatedAt
-        CAST(NULL AS VARBINARY(MAX)),                                -- ProfilePicture
-        CAST(NULL AS BINARY(50)),                                    -- Document
-        CAST(NULL AS IMAGE),                                         -- DeprecatedImage
+        
+        -- BINARY FIELDS (DUMMY DATA)
+        CAST(CONVERT(VARBINARY(MAX), 'Profile_' + CAST(@i AS VARCHAR(10))) AS VARBINARY(MAX)), -- ProfilePicture
+        CAST(REPLICATE(CAST(@i AS BINARY(1)), 50) AS BINARY(50)),     -- Document (50 bytes)
+        CAST(CONVERT(VARBINARY(MAX), 'Image_' + CAST(@i AS VARCHAR(10))) AS IMAGE),             -- DeprecatedImage
+        
+        -- Other fields
         NEWID(),                                                     -- UniqueIdentifier
         '<User><Id>' + CAST(@i AS VARCHAR(10)) + '</Id></User>',     -- XmlData
         '{"userId":' + CAST(@i AS VARCHAR(10)) + '}'                 -- JsonData
