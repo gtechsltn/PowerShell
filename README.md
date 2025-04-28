@@ -1,8 +1,8 @@
 # PowerShell
 
 * [ExeSqlFiles.ps1](https://github.com/gtechsltn/PowerShell/blob/master/ExeSqlFiles.ps1)
-* [ExeSqlFiles.ps1](https://github.com/gtechsltn/PowerShell/blob/master/tblUsers-Schema.sql)
-* [ExeSqlFiles.ps1](https://github.com/gtechsltn/PowerShell/blob/master/tblUsers-Data.sql)
+* [tblUsers-Schema.sql](https://github.com/gtechsltn/PowerShell/blob/master/tblUsers-Schema.sql)
+* [tblUsers-InsertData.sql](https://github.com/gtechsltn/PowerShell/blob/master/tblUsers-InsertData.sql)
 * https://github.com/gtechsltn/SQL
 * https://github.com/gtechsltn/T-SQL
 * https://github.com/gtechsltn/ConsoleApp
