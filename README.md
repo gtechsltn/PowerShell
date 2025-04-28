@@ -1,5 +1,14 @@
 # PowerShell
 
+* [ExeSqlFiles.ps1](https://github.com/gtechsltn/PowerShell/blob/master/ExeSqlFiles.ps1)
+* [ExeSqlFiles.ps1](https://github.com/gtechsltn/PowerShell/blob/master/tblUsers-Schema.sql)
+* [ExeSqlFiles.ps1](https://github.com/gtechsltn/PowerShell/blob/master/tblUsers-Data.sql)
+* https://github.com/gtechsltn/SQL
+* https://github.com/gtechsltn/T-SQL
+* https://github.com/gtechsltn/ConsoleApp
+* https://github.com/gtechsltn/PowerShell
+* https://github.com/gtechsltn/PowerShell-SQL-Server
+
 ## Try Catch Finally
 ```
 Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy RemoteSigned -Force
