@@ -25,6 +25,47 @@ Finally {
     Write-Host "------------------------------------------------------------" -ForegroundColor DarkGreen -BackgroundColor Black
 }
 ```
+## PowerShell script that automatically creates an IIS website using the WebAdministration module
+```
+Import-Module WebAdministration
+
+# --- Configuration ---
+$siteName = "MyWebsite"
+$sitePort = 8080
+$physicalPath = "C:\inetpub\MyWebsite"
+$appPoolName = "MyWebsiteAppPool"
+
+# --- Create the physical folder if it doesn't exist ---
+if (-not (Test-Path $physicalPath)) {
+    New-Item -Path $physicalPath -ItemType Directory -Force
+    Write-Output "Created folder: $physicalPath"
+}
+
+# --- Create Application Pool ---
+if (-not (Test-Path "IIS:\AppPools\$appPoolName")) {
+    New-WebAppPool -Name $appPoolName
+    Write-Output "Created App Pool: $appPoolName"
+}
+
+# --- Create Website ---
+if (-not (Test-Path "IIS:\Sites\$siteName")) {
+    New-Website -Name $siteName `
+                -Port $sitePort `
+                -PhysicalPath $physicalPath `
+                -ApplicationPool $appPoolName
+    Write-Output "Created Website: $siteName on port $sitePort"
+} else {
+    Write-Output "Website $siteName already exists."
+}
+
+# --- Optional: Set app pool settings ---
+Set-ItemProperty "IIS:\AppPools\$appPoolName" -Name "managedRuntimeVersion" -Value "v4.0"
+Set-ItemProperty "IIS:\AppPools\$appPoolName" -Name "processModel.identityType" -Value "ApplicationPoolIdentity"
+
+# --- Start the Website (if not already started) ---
+Start-Website -Name $siteName
+Write-Output "Started Website: $siteName"
+```
 
 ## Create new website
 
