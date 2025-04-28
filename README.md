@@ -25,6 +25,85 @@ Finally {
     Write-Host "------------------------------------------------------------" -ForegroundColor DarkGreen -BackgroundColor Black
 }
 ```
+
+## Create new IIS website if not exists using the WebAdministration module (DONE DONE DONE) (HAY HAY HAY)
+```
+Import-Module WebAdministration
+
+Set-ExecutionPolicy -Scope LocalMachine -ExecutionPolicy RemoteSigned -Force
+
+Clear-Host
+
+$CurrentDir = (Get-Location).Path
+Write-Host "Get-Location into CurrentDir variable: DONE" -ForegroundColor DarkGreen -BackgroundColor Black
+
+Try {    
+    # Code that may throw an exception
+    
+    # --- Configuration ---
+    $siteName = "MyWebsite"
+    $sitePort = 8080
+    $physicalPath = "C:\inetpub\MyWebsite"
+    $appPoolName = "MyWebsiteAppPool"
+    
+    # --- Create the physical folder if it doesn't exist ---
+    if (-not (Test-Path $physicalPath)) {
+        New-Item -Path $physicalPath -ItemType Directory -Force
+        Write-Output "Created folder: $physicalPath"
+    }
+    
+    # --- Check if site already exists ---
+    $siteExists = Test-Path "IIS:\Sites\$siteName"
+    
+    # --- Check if port is already used ---
+    $portInUse = Get-WebBinding | Where-Object { $_.bindingInformation -like "*:${sitePort}:*" }
+    
+    if ($siteExists) {
+        Write-Output "Website '$siteName' already exists. Skipping creation."
+    }
+    elseif ($portInUse) {
+        Write-Output "Port $sitePort is already in use by another site. Cannot create website."
+    }
+    else {
+        # --- Create Application Pool ---
+        if (-not (Test-Path "IIS:\AppPools\$appPoolName")) {
+            New-WebAppPool -Name $appPoolName
+            Write-Output "Created App Pool: $appPoolName"
+        }
+    
+        # --- Create Website ---
+        New-Website -Name $siteName `
+                -Port $sitePort `
+                -PhysicalPath $physicalPath `
+                -ApplicationPool $appPoolName
+        Write-Output "Created Website: $siteName on port $sitePort"
+    
+        # --- Optional: Set app pool settings ---
+        Set-ItemProperty "IIS:\AppPools\$appPoolName" -Name "managedRuntimeVersion" -Value "v4.0"
+        Set-ItemProperty "IIS:\AppPools\$appPoolName" -Name "processModel.identityType" -Value "ApplicationPoolIdentity"
+    
+        # --- Start the Website ---
+        Start-Website -Name $siteName
+        Write-Output "Started Website: $siteName"
+    }
+
+    # --- Open the website in default browser ---
+    Start-Process "http://localhost:$sitePort"
+}
+Catch [System.Exception] {
+    # Code to handle the error
+    # Write-Host $_.Exception.Message -ForegroundColor Red -BackgroundColor Yellow
+}
+Finally {
+    # Code that runs regardless of an error occurring or not
+
+    Set-Location -Path $CurrentDir -PassThru
+    Write-Host "Set-Location -Path '$CurrentDir' : DONE" -ForegroundColor DarkGreen -BackgroundColor Black
+    Write-Host "------------------------------------------------------------" -ForegroundColor DarkGreen -BackgroundColor Black
+}
+```
+
+
 ## PowerShell script that automatically creates an IIS website using the WebAdministration module
 ```
 Import-Module WebAdministration
@@ -68,7 +147,6 @@ Write-Output "Started Website: $siteName"
 ```
 
 ## Create new website
-
 * [Create Website in IIS 10 using PowerShell](https://docs.google.com/document/d/192Likt0k1UveRgdK-DGo4_nO8R3r91e4691JsKiEbak)
 
 ```
